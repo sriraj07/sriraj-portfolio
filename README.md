@@ -10,6 +10,23 @@ assets/         project galleries + interest photos
 .nojekyll       tells GitHub Pages to serve files as-is
 ```
 
+## Change the content (no coding needed)
+
+Everything you'd want to change lives in **`index.html`**. Open it in any text
+editor (TextEdit, Notepad, VS Code). There's a step-by-step guide in a comment
+at the very top of that file. In short:
+
+| To change… | Do this |
+|---|---|
+| Any wording (titles, paragraphs, stats, quotes) | Type over the text that sits **between `>` and `<`**. |
+| A photo | Drop your image into the **`assets`** folder using the **same file name** (e.g. `coffee.jpg`) and same type (`.jpg`/`.png`). |
+| Your email | Edit it in the footer in **two** spots: the visible text and `data-email="..."`. |
+| Social links | Put your profile URL inside `href="#"` in the footer (e.g. `href="https://linkedin.com/in/you"`). |
+| Your name / brand | Edit the `SRIRAJ RAJKUMAR` text in the nav and the `© 2026 …` line in the footer. |
+
+Save the file and refresh the browser — that's it. You never need to touch
+`styles.css` or `script.js` unless you want to change colours or layout.
+
 ## Preview locally
 
 Open `index.html` directly, or run a local server (better for fonts/clipboard):

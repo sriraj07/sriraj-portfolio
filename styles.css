@@ -43,6 +43,7 @@ body {
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
+  overflow-x: hidden;
   transition: background 0.4s ease, color 0.4s ease;
 }
 
@@ -134,10 +135,11 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* ===================== INTRO ===================== */
 .intro {
-  max-width: 960px;
+  max-width: 820px;
   margin: 0 auto;
   padding: clamp(80px, 12vw, 150px) 24px;
   text-align: center;
+  text-wrap: balance;
 }
 .intro-lead {
   font-style: italic;
@@ -394,13 +396,21 @@ img { display: block; max-width: 100%; height: auto; }
   .stats { grid-template-columns: 1fr; }
   .ref-grid { grid-template-columns: 1fr; }
   .interest-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .intro-lead br, .intro-line br { display: none; }
+}
+@media (max-width: 640px) {
+  .nav { padding: 16px 18px; }
+  .brand { font-size: 12px; letter-spacing: 0.14em; }
+  .nav-links { gap: 14px; }
+  .nav-links a { font-size: 10.5px; letter-spacing: 0.1em; }
+  .theme-toggle { width: 28px; height: 28px; font-size: 13px; }
 }
 @media (max-width: 520px) {
   .interest-grid { grid-template-columns: repeat(2, 1fr); }
   .gallery img { min-width: 560px; }
-  .nav-links { gap: 16px; }
-  .nav-links a { font-size: 11px; }
+}
+@media (max-width: 380px) {
+  /* Very small screens only: drop the anchor links, keep brand + theme toggle */
+  .nav-links a { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
