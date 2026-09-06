@@ -43,6 +43,7 @@
     const track = carouselRoot.querySelector(".fig-carousel-track");
     const prevBtn = carouselRoot.querySelector(".fc-arrow.prev");
     const nextBtn = carouselRoot.querySelector(".fc-arrow.next");
+    const segs = Array.from(carouselRoot.querySelectorAll(".fc-divider span"));
     if (!track || !prevBtn || !nextBtn) return;
 
     function step() {
@@ -53,6 +54,14 @@
       const max = track.scrollWidth - track.clientWidth - 1;
       prevBtn.disabled = track.scrollLeft <= 0;
       nextBtn.disabled = track.scrollLeft >= max;
+
+      if (segs.length) {
+        const ratio = max > 0 ? Math.min(Math.max(track.scrollLeft / max, 0), 1) : 0;
+        const filledCount = Math.round(ratio * segs.length);
+        segs.forEach(function (seg, i) {
+          seg.classList.toggle("filled", i < filledCount);
+        });
+      }
     }
 
     prevBtn.addEventListener("click", function () {

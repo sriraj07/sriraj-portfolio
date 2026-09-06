@@ -290,6 +290,10 @@ img { display: block; max-width: 100%; height: auto; }
   height: 3px;
   border-radius: 2px;
   background: var(--card-border);
+  transition: background 0.25s ease;
+}
+.fc-divider span.filled {
+  background: #ffffff;
 }
 
 .fig-carousel-track {
