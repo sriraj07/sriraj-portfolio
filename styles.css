@@ -170,11 +170,11 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .project-year {
   display: block;
-  font-family: "Doto", monospace;
+  font-family: var(--sans);
   font-size: 12px;
   letter-spacing: 0.42em;
   text-transform: uppercase;
-  color: var(--text-faint);
+  color: var(--eyebrow);
   margin-bottom: 18px;
 }
 .project-title {
