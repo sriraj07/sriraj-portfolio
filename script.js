@@ -75,3 +75,16 @@
     updateArrows();
   });
 })();
+
+// Brand link (top-left "SRIRAJ RAJKUMAR") scrolls to the very top of the
+// page. A plain #top anchor doesn't work here because it points at the
+// sticky nav bar itself, and browsers won't scroll to a position:sticky
+// element that's already pinned at the viewport top.
+(function () {
+  const brand = document.querySelector("a.brand");
+  if (!brand) return;
+  brand.addEventListener("click", function (e) {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+})();
