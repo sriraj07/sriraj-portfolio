@@ -328,6 +328,10 @@ img { display: block; max-width: 100%; height: auto; }
   flex: 0 0 clamp(320px, 66%, 947px);
   border-radius: 46px;
 }
+.fc-slide.fc-tall {
+  flex: 0 0 clamp(180px, 30%, 417px);
+  border-radius: 46px;
+}
 .fc-pair {
   flex: 0 0 clamp(150px, 26%, 368px);
   display: flex;
@@ -352,6 +356,7 @@ img { display: block; max-width: 100%; height: auto; }
 @media (max-width: 900px) {
   .fig-carousel-track { height: clamp(260px, 60vw, 420px); gap: 16px; }
   .fc-slide.fc-big { flex-basis: 82%; border-radius: 28px; }
+  .fc-slide.fc-tall { flex-basis: 50%; border-radius: 28px; }
   .fc-pair { flex-basis: 40%; }
 }
 
