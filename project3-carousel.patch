@@ -1,5 +1,5 @@
 diff --git a/index.html b/index.html
-index 1ad3c58..c688cf5 100644
+index 1ad3c58..887e95a 100644
 --- a/index.html
 +++ b/index.html
 @@ -104,7 +104,33 @@
@@ -29,7 +29,7 @@ index 1ad3c58..c688cf5 100644
 +            <p class="fc-item-caption"><strong>Designed Mati Greece Fire in Unreal Engine 5</strong></p>
 +          </div>
 +          <div class="fc-item p3-timeline">
-+            <div class="fc-item-media"><img src="assets/p3-timeline.png" alt="Timeline interaction across two phone screens showing the Greece fire event" loading="lazy" /></div>
++            <div class="fc-item-media"><img src="assets/p3-timeline.png" alt="Timeline interaction across three phone screens showing the Greece fire event, from first sighting to spread across Mati" loading="lazy" /></div>
 +            <p class="fc-item-caption"><strong>Timeline Interaction:</strong> Slide through timeline of the entire event of Greece Mati Fire.</p>
 +          </div>
 +        </div>
@@ -38,10 +38,10 @@ index 1ad3c58..c688cf5 100644
  
      <!-- Project 4 -->
 diff --git a/styles.css b/styles.css
-index d3bd752..10f3a78 100644
+index d3bd752..c10fe3d 100644
 --- a/styles.css
 +++ b/styles.css
-@@ -355,6 +355,48 @@ img { display: block; max-width: 100%; height: auto; }
+@@ -355,6 +355,52 @@ img { display: block; max-width: 100%; height: auto; }
    .fc-pair { flex-basis: 40%; }
  }
  
@@ -52,39 +52,43 @@ index d3bd752..10f3a78 100644
 +  align-items: flex-start;
 +}
 +.fc-item {
++  --h: 450px;
 +  flex: 0 0 auto;
++  width: calc(var(--ar) * var(--h));
 +  display: flex;
 +  flex-direction: column;
-+  gap: 18px;
++  align-items: stretch;
++  gap: 24px;
 +  scroll-snap-align: start;
 +}
 +.fc-item-media {
-+  height: clamp(260px, 34vw, 450px);
++  height: var(--h);
++  width: 100%;
++  overflow: hidden;
 +}
 +.fc-item-media img {
 +  height: 100%;
-+  width: auto;
++  width: 100%;
 +  display: block;
 +  border-radius: 28px;
++  object-fit: contain;
 +}
-+.fc-item.p3-home .fc-item-media { aspect-ratio: 418 / 900; }
-+.fc-item.p3-ar .fc-item-media { aspect-ratio: 1552 / 900; }
-+.fc-item.p3-ue5 .fc-item-media { aspect-ratio: 1552 / 900; }
-+.fc-item.p3-timeline .fc-item-media { aspect-ratio: 902 / 900; }
++.fc-item.p3-home     { --ar: 0.4644; }
++.fc-item.p3-ar       { --ar: 1.7244; }
++.fc-item.p3-ue5      { --ar: 1.7244; }
++.fc-item.p3-timeline { --ar: 1.7244; }
 +
 +.fc-item-caption {
 +  margin: 0;
 +  font-size: 14px;
 +  line-height: 1.65;
 +  color: var(--text-dim);
-+  max-width: 460px;
++  width: 100%;
 +}
 +.fc-item-caption strong { font-weight: 700; color: var(--text); }
-+.fc-item.p3-ar .fc-item-caption,
-+.fc-item.p3-ue5 .fc-item-caption { max-width: 100%; }
 +
 +@media (max-width: 900px) {
-+  .fc-item-media { height: clamp(200px, 55vw, 340px); }
++  .fc-item { --h: clamp(200px, 55vw, 340px); }
 +}
 +
  /* ===================== SHARED SECTION BITS ===================== */

@@ -362,39 +362,43 @@ img { display: block; max-width: 100%; height: auto; }
   align-items: flex-start;
 }
 .fc-item {
+  --h: 450px;
   flex: 0 0 auto;
+  width: calc(var(--ar) * var(--h));
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  align-items: stretch;
+  gap: 24px;
   scroll-snap-align: start;
 }
 .fc-item-media {
-  height: clamp(260px, 34vw, 450px);
+  height: var(--h);
+  width: 100%;
+  overflow: hidden;
 }
 .fc-item-media img {
   height: 100%;
-  width: auto;
+  width: 100%;
   display: block;
   border-radius: 28px;
+  object-fit: contain;
 }
-.fc-item.p3-home .fc-item-media { aspect-ratio: 418 / 900; }
-.fc-item.p3-ar .fc-item-media { aspect-ratio: 1552 / 900; }
-.fc-item.p3-ue5 .fc-item-media { aspect-ratio: 1552 / 900; }
-.fc-item.p3-timeline .fc-item-media { aspect-ratio: 902 / 900; }
+.fc-item.p3-home     { --ar: 0.4644; }
+.fc-item.p3-ar       { --ar: 1.7244; }
+.fc-item.p3-ue5      { --ar: 1.7244; }
+.fc-item.p3-timeline { --ar: 1.7244; }
 
 .fc-item-caption {
   margin: 0;
   font-size: 14px;
   line-height: 1.65;
   color: var(--text-dim);
-  max-width: 460px;
+  width: 100%;
 }
 .fc-item-caption strong { font-weight: 700; color: var(--text); }
-.fc-item.p3-ar .fc-item-caption,
-.fc-item.p3-ue5 .fc-item-caption { max-width: 100%; }
 
 @media (max-width: 900px) {
-  .fc-item-media { height: clamp(200px, 55vw, 340px); }
+  .fc-item { --h: clamp(200px, 55vw, 340px); }
 }
 
 /* ===================== SHARED SECTION BITS ===================== */
