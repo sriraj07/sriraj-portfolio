@@ -251,20 +251,18 @@ img { display: block; max-width: 100%; height: auto; }
   border-radius: 14px;
 }
 
-/* ===================== STACKED CAROUSEL (project galleries) ===================== */
-.carousel { position: relative; }
-
-.carousel-head {
+/* ===================== FIGMA-STYLE HORIZONTAL CAROUSEL (project galleries) ===================== */
+.fig-carousel-head {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 18px;
 }
-.carousel-nav {
+.fc-nav {
   display: flex;
   align-items: center;
   gap: 14px;
 }
-.car-arrow {
+.fc-arrow {
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -278,79 +276,64 @@ img { display: block; max-width: 100%; height: auto; }
   cursor: pointer;
   transition: border-color 0.2s, opacity 0.2s, transform 0.15s;
 }
-.car-arrow:hover:not(:disabled) { border-color: var(--accent); }
-.car-arrow:active:not(:disabled) { transform: scale(0.92); }
-.car-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+.fc-arrow:hover:not(:disabled) { border-color: var(--accent); }
+.fc-arrow:active:not(:disabled) { transform: scale(0.92); }
+.fc-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
 
-.carousel-progress {
+.fc-divider {
   display: flex;
   align-items: center;
   gap: 6px;
 }
-.carousel-progress .seg {
+.fc-divider span {
   width: 20px;
   height: 3px;
   border-radius: 2px;
   background: var(--card-border);
-  transition: width 0.25s ease, background 0.25s ease;
-}
-.carousel-progress .seg.active {
-  width: 34px;
-  background: var(--accent);
 }
 
-.carousel-stage {
+.fig-carousel-track {
   display: flex;
   align-items: stretch;
-  gap: 20px;
+  gap: 40px;
   height: clamp(320px, 38vw, 560px);
-  transition: margin 0.35s ease;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.carousel.at-start .carousel-stage { margin-left: 128px; }
-.carousel.at-end .carousel-stage { margin-right: 128px; }
+.fig-carousel-track::-webkit-scrollbar { display: none; }
 
-.carousel-thumbs {
-  flex: 0 0 clamp(140px, 20%, 260px);
+.fc-slide {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  scroll-snap-align: start;
+}
+.fc-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.fc-slide.fc-big {
+  flex: 0 0 clamp(320px, 66%, 947px);
+  border-radius: 46px;
+}
+.fc-pair {
+  flex: 0 0 clamp(150px, 26%, 368px);
   display: flex;
   flex-direction: column;
   gap: 20px;
-  transition: transform 0.28s ease, opacity 0.28s ease;
+  scroll-snap-align: start;
 }
-.carousel-thumbs .thumb {
-  flex: 1 1 0;
-  min-height: 0;
-  border: none;
-  padding: 0;
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-  background: var(--card);
-  transition: opacity 0.2s, visibility 0.2s;
-}
-.carousel-thumbs .thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.35s ease;
-}
-.carousel-thumbs .thumb:hover img { transform: scale(1.05); }
+.fc-pair .fc-slide.fc-small { flex: 1 1 0; min-height: 0; }
 
-.carousel-main {
-  position: relative;
-  flex: 1 1 auto;
-  border-radius: 18px;
-  overflow: hidden;
-  background: var(--card);
-}
-.carousel-main img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: opacity 0.28s ease;
-}
-.carousel-caption {
+.fc-caption {
   position: absolute;
   left: 0; right: 0; bottom: 0;
   margin: 0;
@@ -360,24 +343,12 @@ img { display: block; max-width: 100%; height: auto; }
   line-height: 1.4;
   background: linear-gradient(180deg, transparent, rgba(0,0,0,0.72));
 }
-.carousel-caption strong { font-weight: 700; }
-
-/* Vertical-scroll transition when paging with the arrows */
-.carousel-stage.anim-next .carousel-thumbs,
-.carousel-stage.anim-prev .carousel-thumbs {
-  opacity: 0;
-}
-.carousel-stage.anim-next .carousel-thumbs { transform: translateY(-28px); }
-.carousel-stage.anim-prev .carousel-thumbs { transform: translateY(28px); }
-.carousel-stage.anim-next .carousel-main img,
-.carousel-stage.anim-prev .carousel-main img { opacity: 0; }
+.fc-caption strong { font-weight: 700; }
 
 @media (max-width: 900px) {
-  .carousel.at-start .carousel-stage,
-  .carousel.at-end .carousel-stage { margin-left: 0; margin-right: 0; }
-  .carousel-stage { flex-direction: column; height: auto; }
-  .carousel-main { height: clamp(220px, 60vw, 380px); }
-  .carousel-thumbs { flex-direction: row; height: 110px; }
+  .fig-carousel-track { height: clamp(260px, 60vw, 420px); gap: 16px; }
+  .fc-slide.fc-big { flex-basis: 82%; border-radius: 28px; }
+  .fc-pair { flex-basis: 40%; }
 }
 
 /* ===================== SHARED SECTION BITS ===================== */
