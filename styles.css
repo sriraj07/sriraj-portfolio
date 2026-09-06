@@ -355,6 +355,48 @@ img { display: block; max-width: 100%; height: auto; }
   .fc-pair { flex-basis: 40%; }
 }
 
+/* ---- Captioned mockup carousel (Project 3): image sized to its own aspect
+   ratio so nothing is cropped, caption sits below instead of overlaid. ---- */
+.fc-track-captioned {
+  height: auto;
+  align-items: flex-start;
+}
+.fc-item {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  scroll-snap-align: start;
+}
+.fc-item-media {
+  height: clamp(260px, 34vw, 450px);
+}
+.fc-item-media img {
+  height: 100%;
+  width: auto;
+  display: block;
+  border-radius: 28px;
+}
+.fc-item.p3-home .fc-item-media { aspect-ratio: 418 / 900; }
+.fc-item.p3-ar .fc-item-media { aspect-ratio: 1552 / 900; }
+.fc-item.p3-ue5 .fc-item-media { aspect-ratio: 1552 / 900; }
+.fc-item.p3-timeline .fc-item-media { aspect-ratio: 902 / 900; }
+
+.fc-item-caption {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-dim);
+  max-width: 460px;
+}
+.fc-item-caption strong { font-weight: 700; color: var(--text); }
+.fc-item.p3-ar .fc-item-caption,
+.fc-item.p3-ue5 .fc-item-caption { max-width: 100%; }
+
+@media (max-width: 900px) {
+  .fc-item-media { height: clamp(200px, 55vw, 340px); }
+}
+
 /* ===================== SHARED SECTION BITS ===================== */
 .eyebrow {
   display: block;

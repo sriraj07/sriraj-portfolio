@@ -1,0 +1,92 @@
+diff --git a/index.html b/index.html
+index 1ad3c58..c688cf5 100644
+--- a/index.html
++++ b/index.html
+@@ -104,7 +104,33 @@
+         <div class="stat"><span class="stat-num">Cause-driven</span><span class="stat-label">Built to fight news avoidance</span><span class="stat-cap">Focused on younger audiences</span></div>
+         <div class="stat"><span class="stat-num">Spatial UX</span><span class="stat-label">Interactive storytelling</span><span class="stat-cap">Tested through mobile AR prototypes</span></div>
+       </div>
+-      <div class="gallery"><img src="assets/gallery-p3.png" alt="AR Journalism App — iPhone AR storytelling mockups and Mati Greece Fire scene in Unreal Engine" loading="lazy" /></div>
++      <div class="fig-carousel" data-fig-carousel>
++        <div class="fig-carousel-head">
++          <div class="fc-nav">
++            <button class="fc-arrow prev" aria-label="Scroll projects left" type="button">&#8249;</button>
++            <div class="fc-divider"><span></span><span></span><span></span></div>
++            <button class="fc-arrow next" aria-label="Scroll projects right" type="button">&#8250;</button>
++          </div>
++        </div>
++        <div class="fig-carousel-track fc-track-captioned">
++          <div class="fc-item p3-home">
++            <div class="fc-item-media"><img src="assets/p3-home-screen.png" alt="Home screen with aerial 3D map of Mati, Greece and survivor story cards" loading="lazy" /></div>
++            <p class="fc-item-caption"><strong>Home screen blends live AR</strong><br>An aerial 3D map of Mati, Greece with survivor experiences story cards up top, articles in simple 4-tab nav.</p>
++          </div>
++          <div class="fc-item p3-ar">
++            <div class="fc-item-media"><img src="assets/p3-ar-storytelling.png" alt="AR storytelling flow across three phone screens" loading="lazy" /></div>
++            <p class="fc-item-caption"><strong>AR Storytelling:</strong> Point your phone at any flat surface and Mati, Greece rises up in 3D beneath you. Tap into someone's story and it's like they're standing right there, telling you what happened, in their own space.</p>
++          </div>
++          <div class="fc-item p3-ue5">
++            <div class="fc-item-media"><img src="assets/p3-ue5-fire.png" alt="Mati Greece Fire scene rendered in Unreal Engine 5" loading="lazy" /></div>
++            <p class="fc-item-caption"><strong>Designed Mati Greece Fire in Unreal Engine 5</strong></p>
++          </div>
++          <div class="fc-item p3-timeline">
++            <div class="fc-item-media"><img src="assets/p3-timeline.png" alt="Timeline interaction across two phone screens showing the Greece fire event" loading="lazy" /></div>
++            <p class="fc-item-caption"><strong>Timeline Interaction:</strong> Slide through timeline of the entire event of Greece Mati Fire.</p>
++          </div>
++        </div>
++      </div>
+     </section>
+ 
+     <!-- Project 4 -->
+diff --git a/styles.css b/styles.css
+index d3bd752..10f3a78 100644
+--- a/styles.css
++++ b/styles.css
+@@ -355,6 +355,48 @@ img { display: block; max-width: 100%; height: auto; }
+   .fc-pair { flex-basis: 40%; }
+ }
+ 
++/* ---- Captioned mockup carousel (Project 3): image sized to its own aspect
++   ratio so nothing is cropped, caption sits below instead of overlaid. ---- */
++.fc-track-captioned {
++  height: auto;
++  align-items: flex-start;
++}
++.fc-item {
++  flex: 0 0 auto;
++  display: flex;
++  flex-direction: column;
++  gap: 18px;
++  scroll-snap-align: start;
++}
++.fc-item-media {
++  height: clamp(260px, 34vw, 450px);
++}
++.fc-item-media img {
++  height: 100%;
++  width: auto;
++  display: block;
++  border-radius: 28px;
++}
++.fc-item.p3-home .fc-item-media { aspect-ratio: 418 / 900; }
++.fc-item.p3-ar .fc-item-media { aspect-ratio: 1552 / 900; }
++.fc-item.p3-ue5 .fc-item-media { aspect-ratio: 1552 / 900; }
++.fc-item.p3-timeline .fc-item-media { aspect-ratio: 902 / 900; }
++
++.fc-item-caption {
++  margin: 0;
++  font-size: 14px;
++  line-height: 1.65;
++  color: var(--text-dim);
++  max-width: 460px;
++}
++.fc-item-caption strong { font-weight: 700; color: var(--text); }
++.fc-item.p3-ar .fc-item-caption,
++.fc-item.p3-ue5 .fc-item-caption { max-width: 100%; }
++
++@media (max-width: 900px) {
++  .fc-item-media { height: clamp(200px, 55vw, 340px); }
++}
++
+ /* ===================== SHARED SECTION BITS ===================== */
+ .eyebrow {
+   display: block;
