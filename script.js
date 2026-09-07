@@ -46,8 +46,35 @@
     const segs = Array.from(carouselRoot.querySelectorAll(".fc-divider span"));
     if (!track || !prevBtn || !nextBtn) return;
 
-    function step() {
-      return Math.max(track.clientWidth * 0.85, 280);
+    // Treat each direct child of the track (a slide, a pair, whatever it is)
+    // as one "stop" — this is what makes prev/next move one card at a time
+    // instead of jumping by a fixed fraction of the viewport.
+    function cards() {
+      return Array.from(track.children);
+    }
+
+    // getBoundingClientRect (not offsetLeft) because offsetLeft is relative to
+    // the nearest positioned ancestor, which isn't reliably the track itself.
+    function cardLeft(card) {
+      return card.getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft;
+    }
+
+    function closestCardIndex() {
+      const kids = cards();
+      let closestIdx = 0;
+      let closestDist = Infinity;
+      kids.forEach(function (card, i) {
+        const dist = Math.abs(cardLeft(card) - track.scrollLeft);
+        if (dist < closestDist) { closestDist = dist; closestIdx = i; }
+      });
+      return closestIdx;
+    }
+
+    function scrollToCard(idx) {
+      const kids = cards();
+      if (!kids.length) return;
+      const clamped = Math.max(0, Math.min(kids.length - 1, idx));
+      track.scrollTo({ left: cardLeft(kids[clamped]), behavior: "smooth" });
     }
 
     function updateArrows() {
@@ -57,7 +84,8 @@
 
       if (segs.length) {
         const ratio = max > 0 ? Math.min(Math.max(track.scrollLeft / max, 0), 1) : 0;
-        const filledCount = Math.round(ratio * segs.length);
+        // Always keep at least the first segment filled, even at scrollLeft 0.
+        const filledCount = Math.max(1, Math.round(ratio * segs.length));
         segs.forEach(function (seg, i) {
           seg.classList.toggle("filled", i < filledCount);
         });
@@ -65,10 +93,10 @@
     }
 
     prevBtn.addEventListener("click", function () {
-      track.scrollBy({ left: -step(), behavior: "smooth" });
+      scrollToCard(closestCardIndex() - 1);
     });
     nextBtn.addEventListener("click", function () {
-      track.scrollBy({ left: step(), behavior: "smooth" });
+      scrollToCard(closestCardIndex() + 1);
     });
     track.addEventListener("scroll", updateArrows, { passive: true });
     window.addEventListener("resize", updateArrows);
