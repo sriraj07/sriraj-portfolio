@@ -133,7 +133,7 @@
 
   const LINES = ["Spatial", "Design"];
   const PALETTE = ["#8830E0", "#FF8D28", "#B1B1B1"];
-  const PARTICLE_SIZE = 64; // 1-100 (rendered at size/4, matching the source component)
+  const PARTICLE_SIZE = 32; // 1-100 (rendered at size/4, matching the source component)
   const PARTICLE_COUNT = 50; // 1-50, higher = denser
   const MOUSE_RADIUS = 45;
   const MOUSE_FORCE = 25;
