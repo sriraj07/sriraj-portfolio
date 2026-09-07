@@ -5,7 +5,7 @@
 
 :root {
   --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --rounded: "Fredoka", "Helvetica Neue", sans-serif;
+  --rounded: "Bricolage Grotesque", "Helvetica Neue", sans-serif;
   --accent: #ff8d28;
   --container: 1200px;
 
@@ -14,7 +14,7 @@
   --bg-elev: #151515;
   --card: #171717;
   --card-border: rgba(255, 255, 255, 0.07);
-  --text: #f4f4f4;
+  --text: #e6e6e6;
   --text-dim: #a3a3a3;
   --text-faint: #6b6b6b;
   --eyebrow: #7c7c7c;
@@ -62,14 +62,17 @@ img { display: block; max-width: 100%; height: auto; }
   border-bottom: 1px solid var(--card-border);
 }
 .brand {
+  font-family: var(--rounded);
   font-size: 15px;
   letter-spacing: 0.22em;
-  font-weight: 500;
+  font-weight: 700;
   color: var(--text);
   text-decoration: none;
 }
 .nav-links { display: flex; align-items: center; gap: clamp(20px, 3vw, 40px); }
 .nav-links a {
+  font-family: var(--rounded);
+  font-weight: 400;
   font-size: 12.5px;
   letter-spacing: 0.16em;
   color: var(--text-dim);
@@ -200,9 +203,10 @@ img { display: block; max-width: 100%; height: auto; }
   margin-bottom: 18px;
 }
 .project-title {
+  font-family: var(--rounded);
   color: var(--accent);
   font-size: clamp(28px, 4vw, 44px);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.1;
   margin-bottom: 26px;
@@ -238,7 +242,7 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .stat-num {
   font-family: var(--rounded);
-  font-weight: 500;
+  font-weight: 700;
   font-size: clamp(30px, 3.4vw, 40px);
   color: var(--accent);
   line-height: 1.05;
