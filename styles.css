@@ -283,10 +283,10 @@ img { display: block; max-width: 100%; height: auto; }
 .fc-divider {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 .fc-divider span {
-  width: 20px;
+  width: 16px;
   height: 3px;
   border-radius: 2px;
   background: var(--card-border);
