@@ -133,13 +133,13 @@
 
   const LINES = ["Spatial", "Design"];
   const PALETTE = ["#8830E0", "#FF8D28", "#B1B1B1"];
-  const PARTICLE_SIZE = 5; // 1-100 (rendered at size/4, matching the source component)
+  const PARTICLE_SIZE = 32; // 1-100 (rendered at size/4, matching the source component)
   const PARTICLE_COUNT = 50; // 1-50, higher = denser
   const MOUSE_RADIUS = 45;
   const MOUSE_FORCE = 25;
-  const FONT_SIZE_CAP = 192;
+  const FONT_SIZE_CAP = 250;
   const FONT_WEIGHT = 600; // Medium
-  const FONT_FAMILY = '"Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif';
+  const FONT_FAMILY = '"Bricolage Grotesque", Arial, sans-serif';
   const FORM_MS = 900; // formation duration in ms
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
