@@ -1,452 +1,631 @@
-// Theme toggle (persisted) + copy-to-clipboard email.
+/* =========================================================
+   Sriraj Rajkumar — Portfolio 2026
+   Reproduced from Figma "Portfolio - 2026" (dark + light).
+   ========================================================= */
 
-(function () {
-  const root = document.documentElement;
-  const toggle = document.getElementById("themeToggle");
+:root {
+  --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --rounded: "Fredoka", "Helvetica Neue", sans-serif;
+  --accent: #ff8d28;
+  --container: 1200px;
 
-  // Default to dark (the design's primary). Only override if the visitor
-  // has explicitly chosen a theme before.
-  const saved = localStorage.getItem("theme");
-  if (saved) root.setAttribute("data-theme", saved);
+  /* Dark theme (default) */
+  --bg: #0a0a0a;
+  --bg-elev: #151515;
+  --card: #171717;
+  --card-border: rgba(255, 255, 255, 0.07);
+  --text: #f4f4f4;
+  --text-dim: #a3a3a3;
+  --text-faint: #6b6b6b;
+  --eyebrow: #7c7c7c;
+  --hero-grad: radial-gradient(120% 90% at 50% 20%, #6b7a8c 0%, #3a434f 35%, #14171c 75%, #0a0a0a 100%);
+}
 
-  toggle.addEventListener("click", function () {
-    const next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
-    root.setAttribute("data-theme", next);
-    localStorage.setItem("theme", next);
-  });
+[data-theme="light"] {
+  --bg: #f4f4f5;
+  --bg-elev: #ffffff;
+  --card: #ffffff;
+  --card-border: rgba(0, 0, 0, 0.08);
+  --text: #131313;
+  --text-dim: #4d4d4d;
+  --text-faint: #8a8a8a;
+  --eyebrow: #8a8a8a;
+  --hero-grad: radial-gradient(120% 90% at 50% 20%, #aab6c4 0%, #7c8896 40%, #cfd4da 80%, #f4f4f5 100%);
+}
 
-  // Copy email to clipboard.
-  const emailBtn = document.getElementById("copyEmail");
-  const hint = document.getElementById("copyHint");
-  if (emailBtn) {
-    emailBtn.addEventListener("click", async function () {
-      const email = emailBtn.dataset.email;
-      try {
-        await navigator.clipboard.writeText(email);
-        hint.textContent = "COPIED ✓";
-      } catch (e) {
-        // Fallback for browsers without clipboard API / non-secure contexts.
-        const t = document.createElement("textarea");
-        t.value = email;
-        document.body.appendChild(t);
-        t.select();
-        try { document.execCommand("copy"); hint.textContent = "COPIED ✓"; }
-        catch (_) { hint.textContent = "COPY FAILED"; }
-        document.body.removeChild(t);
-      }
-      setTimeout(() => (hint.textContent = "CLICK TO COPY"), 2000);
-    });
-  }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  // Figma-style horizontal project carousels: arrows scroll the track left/right.
-  document.querySelectorAll("[data-fig-carousel]").forEach(function (carouselRoot) {
-    const track = carouselRoot.querySelector(".fig-carousel-track");
-    const prevBtn = carouselRoot.querySelector(".fc-arrow.prev");
-    const nextBtn = carouselRoot.querySelector(".fc-arrow.next");
-    const segs = Array.from(carouselRoot.querySelectorAll(".fc-divider span"));
-    if (!track || !prevBtn || !nextBtn) return;
+html { scroll-behavior: smooth; }
 
-    // Treat each direct child of the track (a slide, a pair, whatever it is)
-    // as one "stop" — this is what makes prev/next move one card at a time
-    // instead of jumping by a fixed fraction of the viewport.
-    function cards() {
-      return Array.from(track.children);
-    }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  overflow-x: hidden;
+  transition: background 0.4s ease, color 0.4s ease;
+}
 
-    // getBoundingClientRect (not offsetLeft) because offsetLeft is relative to
-    // the nearest positioned ancestor, which isn't reliably the track itself.
-    function cardLeft(card) {
-      return card.getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft;
-    }
+img { display: block; max-width: 100%; height: auto; }
 
-    function closestCardIndex() {
-      const kids = cards();
-      let closestIdx = 0;
-      let closestDist = Infinity;
-      kids.forEach(function (card, i) {
-        const dist = Math.abs(cardLeft(card) - track.scrollLeft);
-        if (dist < closestDist) { closestDist = dist; closestIdx = i; }
-      });
-      return closestIdx;
-    }
+/* ===================== NAV ===================== */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px clamp(24px, 5vw, 64px);
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--card-border);
+}
+.brand {
+  font-size: 15px;
+  letter-spacing: 0.22em;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+}
+.nav-links { display: flex; align-items: center; gap: clamp(20px, 3vw, 40px); }
+.nav-links a {
+  font-size: 12.5px;
+  letter-spacing: 0.16em;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  display: grid; place-items: center;
+  transition: border-color 0.2s, transform 0.3s;
+}
+.theme-toggle:hover { border-color: var(--accent); transform: rotate(180deg); }
 
-    function scrollToCard(idx) {
-      const kids = cards();
-      if (!kids.length) return;
-      const clamped = Math.max(0, Math.min(kids.length - 1, idx));
-      track.scrollTo({ left: cardLeft(kids[clamped]), behavior: "smooth" });
-    }
+/* ===================== HERO ===================== */
+.hero {
+  position: relative;
+  height: min(95vh, 1300px);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #09090B;
+}
+.hero-spline, .hero-fallback {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+/* Animated glass-cube-ish fallback until the Spline scene is wired in */
+.hero-fallback {
+  background:
+    radial-gradient(2px 2px at 20% 30%, rgba(90,150,220,0.7), transparent 60%),
+    radial-gradient(3px 3px at 65% 45%, rgba(70,130,210,0.6), transparent 60%),
+    radial-gradient(2px 2px at 80% 25%, rgba(120,170,230,0.6), transparent 60%),
+    radial-gradient(2px 2px at 40% 60%, rgba(80,140,215,0.55), transparent 60%),
+    radial-gradient(3px 3px at 30% 75%, rgba(100,160,225,0.5), transparent 60%);
+  filter: blur(0.3px);
+  animation: drift 14s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(-2%, -2%, 0) scale(1.06); }
+}
+.hero-title {
+  position: relative;
+  z-index: 2;
+  font-family: "Doto", var(--sans);
+  font-weight: 600;
+  font-size: clamp(40px, 11vw, 150px);
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.92);
+  text-align: center;
+  mix-blend-mode: overlay;
+  user-select: none;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.hero-particle-text {
+  position: relative;
+  z-index: 2;
+  width: min(95vw, 1800px);
+  height: clamp(440px, 64vw, 840px);
+}
+.hero-particle-text canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 
-    function updateArrows() {
-      const max = track.scrollWidth - track.clientWidth - 1;
-      prevBtn.disabled = track.scrollLeft <= 0;
-      nextBtn.disabled = track.scrollLeft >= max;
+/* ===================== INTRO ===================== */
+.intro {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: clamp(80px, 12vw, 150px) 24px;
+  text-align: center;
+  text-wrap: balance;
+}
+.intro-lead {
+  font-style: italic;
+  font-size: clamp(22px, 3vw, 30px);
+  color: var(--text);
+  margin-bottom: 2.6em;
+  line-height: 1.45;
+}
+.intro-line {
+  font-style: italic;
+  font-size: clamp(18px, 2.3vw, 26px);
+  color: var(--text-dim);
+  margin-bottom: 2.4em;
+  line-height: 1.5;
+}
+.intro-sign {
+  font-style: italic;
+  font-size: 15px;
+  color: var(--text-faint);
+  margin-top: 1em;
+}
 
-      if (segs.length) {
-        const ratio = max > 0 ? Math.min(Math.max(track.scrollLeft / max, 0), 1) : 0;
-        // Always keep at least the first segment filled, even at scrollLeft 0.
-        const filledCount = Math.max(1, Math.round(ratio * segs.length));
-        segs.forEach(function (seg, i) {
-          seg.classList.toggle("filled", i < filledCount);
-        });
-      }
-    }
+/* ===================== PROJECTS ===================== */
+.project {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: clamp(48px, 7vw, 90px) clamp(24px, 5vw, 40px);
+}
+.project-year {
+  display: block;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--eyebrow);
+  margin-bottom: 18px;
+}
+.project-title {
+  color: var(--accent);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  margin-bottom: 26px;
+}
+.project-body {
+  max-width: 620px;
+  font-size: clamp(17px, 1.6vw, 21px);
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 44px;
+}
 
-    prevBtn.addEventListener("click", function () {
-      scrollToCard(closestCardIndex() - 1);
-    });
-    nextBtn.addEventListener("click", function () {
-      scrollToCard(closestCardIndex() + 1);
-    });
-    track.addEventListener("scroll", updateArrows, { passive: true });
-    window.addEventListener("resize", updateArrows);
-    updateArrows();
-  });
-})();
+/* Stat cards */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 56px;
+}
+.stat {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 22px;
+  padding: 28px 28px 24px;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0) 40%);
+}
+[data-theme="light"] .stat {
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0) 40%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.stat-num {
+  font-family: var(--rounded);
+  font-weight: 500;
+  font-size: clamp(30px, 3.4vw, 40px);
+  color: var(--accent);
+  line-height: 1.05;
+  margin-bottom: 12px;
+}
+.stat-label {
+  font-family: var(--rounded);
+  font-weight: 400;
+  font-size: 20px;
+  color: var(--text);
+  line-height: 1.25;
+}
+.stat-cap {
+  margin-top: auto;
+  padding-top: 22px;
+  font-size: 12.5px;
+  color: var(--text-faint);
+  line-height: 1.4;
+}
 
-// Brand link (top-left "SRIRAJ RAJKUMAR") scrolls to the very top of the
-// page. A plain #top anchor doesn't work here because it points at the
-// sticky nav bar itself, and browsers won't scroll to a position:sticky
-// element that's already pinned at the viewport top.
-(function () {
-  const brand = document.querySelector("a.brand");
-  if (!brand) return;
-  brand.addEventListener("click", function (e) {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-})();
+/* Gallery */
+.gallery {
+  border-radius: 18px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+.gallery img {
+  width: 100%;
+  min-width: 720px;
+  border-radius: 14px;
+}
 
-// Hero "particle drift" text — ported from an Originkit/Framer React
-// component to plain canvas + rAF (no build step here, so the React/Framer
-// bits are gone; the particle sampling, formation and cursor-repulsion
-// physics are kept as-is). Renders "Spatial" / "Design" as two centered
-// lines of colored particles that assemble once the hero scrolls into view,
-// then drift away from the cursor like a void carved out of a star field.
-(function () {
-  const container = document.getElementById("heroParticleText");
-  if (!container) return;
-  const canvas = container.querySelector("canvas");
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d", { alpha: true });
-  if (!ctx) return;
+/* ===================== FIGMA-STYLE HORIZONTAL CAROUSEL (project galleries) ===================== */
+.fig-carousel-head {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 18px;
+}
+.fc-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.fc-arrow {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: border-color 0.2s, opacity 0.2s, transform 0.15s;
+}
+.fc-arrow:hover:not(:disabled) { border-color: var(--accent); }
+.fc-arrow:active:not(:disabled) { transform: scale(0.92); }
+.fc-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
 
-  const LINES = ["Spatial", "Design"];
-  const PALETTE = ["#8830E0", "#FF8D28", "#B1B1B1"];
-  const PARTICLE_SIZE = 4; // 1-100 (rendered at size/4, matching the source component)
-  const PARTICLE_COUNT = 50; // 1-50, higher = denser
-  const MOUSE_RADIUS = 45;
-  const MOUSE_FORCE = 25;
-  const FONT_SIZE_CAP = 200;
-  const FONT_WEIGHT = 600; // Medium
-  const FONT_FAMILY = '"Bricolage Grotesque", Arial, sans-serif';
-  const FORM_MS = 900; // formation duration in ms
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+.fc-divider {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.fc-divider span {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--card-border);
+  transition: background 0.25s ease;
+}
+.fc-divider span.filled {
+  background: #ffffff;
+}
 
-  // Evaluate a CSS cubic-bezier [x1,y1,x2,y2] as an (x in 0..1) => eased fn.
-  function cubicBezier(x1, y1, x2, y2) {
-    const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
-    const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
-    const sampleX = (t) => ((ax * t + bx) * t + cx) * t;
-    const sampleY = (t) => ((ay * t + by) * t + cy) * t;
-    return function (x) {
-      if (x <= 0) return 0;
-      if (x >= 1) return 1;
-      let lo = 0, hi = 1, t = x;
-      for (let i = 0; i < 12; i++) {
-        const mid = (lo + hi) / 2;
-        const sx = sampleX(mid);
-        if (Math.abs(sx - x) < 1e-6) { t = mid; break; }
-        if (sx < x) lo = mid; else hi = mid;
-        t = mid;
-      }
-      return sampleY(t);
-    };
-  }
-  const easeFn = cubicBezier(0.16, 1, 0.3, 1); // easeOutExpo-ish
+.fig-carousel-track {
+  display: flex;
+  align-items: stretch;
+  gap: 40px;
+  height: clamp(320px, 38vw, 560px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.fig-carousel-track::-webkit-scrollbar { display: none; }
 
-  let count = 0;
-  let ox = new Float32Array(0), oy = new Float32Array(0);
-  let sx = new Float32Array(0), sy = new Float32Array(0);
-  let px = new Float32Array(0), py = new Float32Array(0);
-  let repX = new Float32Array(0), repY = new Float32Array(0);
-  let cIdx = new Uint8Array(0);
+.fc-slide {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  scroll-snap-align: start;
+}
+.fc-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.fc-slide.fc-big {
+  flex: 0 0 clamp(320px, 66%, 947px);
+  border-radius: 46px;
+}
+.fc-slide.fc-tall {
+  flex: 0 0 clamp(180px, 30%, 417px);
+  border-radius: 46px;
+}
+.fc-pair {
+  flex: 0 0 clamp(150px, 26%, 368px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  scroll-snap-align: start;
+}
+.fc-pair .fc-slide.fc-small { flex: 1 1 0; min-height: 0; }
 
-  let cssW = 0, cssH = 0, dpr = 1;
-  let prevMx = -99999, prevMy = -99999, mouseSpeed = 0;
-  let smoothX = -99999, smoothY = -99999;
+.fc-caption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  margin: 0;
+  padding: 34px 24px 18px;
+  font-size: 14px;
+  color: #fff;
+  line-height: 1.4;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.72));
+}
+.fc-caption strong { font-weight: 700; }
 
-  const pointer = { x: -99999, y: -99999, active: false };
-  let formVal = 0;
-  let lastFrame = null;
-  let hidden = true;
-  let reverse = false;
+@media (max-width: 900px) {
+  .fig-carousel-track { height: clamp(260px, 60vw, 420px); gap: 16px; }
+  .fc-slide.fc-big { flex-basis: 82%; border-radius: 28px; }
+  .fc-slide.fc-tall { flex-basis: 50%; border-radius: 28px; }
+  .fc-pair { flex-basis: 40%; }
+}
 
-  // Largest font size where every line's width fits maxW and its height
-  // (approximated as the font size itself) fits maxLineH.
-  function fitFontSize(measureCtx, lines, maxW, maxLineH, cap) {
-    let lo = 8, hi = cap, best = lo;
-    for (let i = 0; i < 12; i++) {
-      const mid = (lo + hi) / 2;
-      measureCtx.font = `${FONT_WEIGHT} ${mid}px ${FONT_FAMILY}`;
-      let widest = 0;
-      lines.forEach(function (line) {
-        const w = measureCtx.measureText(line).width;
-        if (w > widest) widest = w;
-      });
-      if (widest <= maxW && mid <= maxLineH) { best = mid; lo = mid; }
-      else { hi = mid; }
-    }
-    return Math.max(8, Math.floor(best));
-  }
+/* ---- Captioned mockup carousel (Project 3): image sized to its own aspect
+   ratio so nothing is cropped, caption sits below instead of overlaid. ---- */
+.fc-track-captioned {
+  height: auto;
+  align-items: flex-start;
+}
+.fc-item {
+  --h: 450px;
+  flex: 0 0 auto;
+  width: calc(var(--ar) * var(--h));
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 24px;
+  scroll-snap-align: start;
+}
+.fc-item-media {
+  height: var(--h);
+  width: 100%;
+  overflow: hidden;
+}
+.fc-item-media img {
+  height: 100%;
+  width: 100%;
+  display: block;
+  border-radius: 28px;
+  object-fit: contain;
+}
+.fc-item.p3-home     { --ar: 0.4644; }
+.fc-item.p3-ar       { --ar: 1.7244; }
+.fc-item.p3-ue5      { --ar: 1.7244; }
+.fc-item.p3-timeline { --ar: 1.7244; }
 
-  function sampleText() {
-    const W = cssW, H = cssH;
-    if (W <= 0 || H <= 0) return;
-    const off = document.createElement("canvas");
-    off.width = Math.max(1, Math.floor(W * dpr));
-    off.height = Math.max(1, Math.floor(H * dpr));
-    const offCtx = off.getContext("2d", { willReadFrequently: true });
-    if (!offCtx) return;
-    offCtx.scale(dpr, dpr);
+.fc-item-caption {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-dim);
+  width: 100%;
+}
+.fc-item-caption strong { font-weight: 700; color: var(--text); }
 
-    const maxW = W * 0.92;
-    const maxLineH = (H * 0.92) / LINES.length;
-    const size = fitFontSize(offCtx, LINES, maxW, maxLineH, FONT_SIZE_CAP);
+@media (max-width: 900px) {
+  .fc-item { --h: clamp(200px, 55vw, 340px); }
+}
 
-    offCtx.clearRect(0, 0, W, H);
-    offCtx.fillStyle = "#fff";
-    offCtx.font = `${FONT_WEIGHT} ${size}px ${FONT_FAMILY}`;
-    offCtx.textAlign = "center";
-    offCtx.textBaseline = "middle";
-    const lineGap = size * 1.05;
-    const totalH = lineGap * (LINES.length - 1);
-    const startY = H / 2 - totalH / 2;
-    LINES.forEach(function (line, i) {
-      offCtx.fillText(line, W / 2, startY + i * lineGap);
-    });
+/* ===================== SHARED SECTION BITS ===================== */
+.eyebrow {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--eyebrow);
+  margin-bottom: 18px;
+}
+.section-heading {
+  font-size: clamp(30px, 4.5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 48px;
+}
+.section-heading.accent, .references .section-heading { color: var(--accent); }
 
-    const img = offCtx.getImageData(0, 0, Math.floor(W * dpr), Math.floor(H * dpr));
-    const data = img.data;
+/* ===================== REFERENCES ===================== */
+.references {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: clamp(60px, 9vw, 110px) clamp(24px, 5vw, 40px);
+}
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.ref-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 26px;
+  padding: 40px 34px 34px;
+  display: flex;
+  flex-direction: column;
+}
+.ref-quote {
+  font-family: var(--rounded);
+  font-weight: 400;
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.3;
+  color: var(--text);
+  margin-bottom: 42px;
+}
+.ref-by {
+  font-style: normal;
+  font-size: 14px;
+  color: var(--text-faint);
+  line-height: 1.5;
+  margin-top: auto;
+}
 
-    const pCount = Math.max(1, Math.min(50, PARTICLE_COUNT));
-    const stride = Math.max(2, Math.round(150 / pCount));
+/* ===================== INTERESTS ===================== */
+.interests {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 70px) clamp(24px, 5vw, 40px) clamp(80px, 10vw, 130px);
+}
+.interests-copy { max-width: 1040px; margin-bottom: 60px; }
+.interests-copy p {
+  font-size: clamp(19px, 2.1vw, 27px);
+  line-height: 1.45;
+  color: var(--text);
+  margin-bottom: 1.2em;
+}
+.interest-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+.interest-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  aspect-ratio: 266 / 399;
+}
+.interest-card img { width: 100%; height: 100%; object-fit: cover; }
+.interest-card figcaption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 40px 18px 16px;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.72));
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.interest-card figcaption strong { font-size: 15px; font-weight: 700; }
+.interest-card figcaption span { font-size: 13px; color: rgba(255,255,255,0.75); }
 
-    let candidates = 0;
-    for (let y = 0; y < H; y += stride) {
-      for (let x = 0; x < W; x += stride) {
-        const ix = Math.floor(x * dpr), iy = Math.floor(y * dpr);
-        const idx = (iy * img.width + ix) * 4 + 3;
-        if (data[idx] > 128) candidates++;
-      }
-    }
-    const downsample = candidates > 30000 ? Math.ceil(candidates / 30000) : 1;
-    const allocCount = Math.min(candidates, 30000);
+/* ===================== FOOTER ===================== */
+.footer {
+  background: #d5d5d5;
+  color: #1a1a1a;
+  text-align: center;
+  padding: clamp(90px, 14vw, 150px) 24px 60px;
+}
+.footer-eyebrow {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: #6a6a6a;
+  margin-bottom: 26px;
+}
+.footer-email {
+  background: none; border: none; cursor: pointer;
+  font-family: var(--sans);
+  font-size: clamp(24px, 4.4vw, 44px);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: #111;
+  transition: color 0.2s;
+}
+.footer-email:hover { color: var(--accent); }
+.footer-copy-hint {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  color: #6a6a6a;
+  margin-top: 24px;
+}
+.footer-socials {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 26px;
+  margin-top: clamp(120px, 18vw, 200px);
+}
+.footer-socials a {
+  font-size: 11.5px;
+  letter-spacing: 0.18em;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-socials a:hover { color: #111; }
+.footer-note {
+  display: block;
+  margin-top: 22px;
+  font-size: 12px;
+  color: #7a7a7a;
+}
 
-    const newOx = new Float32Array(allocCount);
-    const newOy = new Float32Array(allocCount);
-    const newSx = new Float32Array(allocCount);
-    const newSy = new Float32Array(allocCount);
-    const newPx = new Float32Array(allocCount);
-    const newPy = new Float32Array(allocCount);
-    const newC = new Uint8Array(allocCount);
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 900px) {
+  .stats { grid-template-columns: 1fr; }
+  .ref-grid { grid-template-columns: 1fr; }
+  .interest-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+}
+@media (max-width: 640px) {
+  .nav { padding: 16px 18px; }
+  .brand { font-size: 12px; letter-spacing: 0.14em; }
+  .nav-links { gap: 14px; }
+  .nav-links a { font-size: 10.5px; letter-spacing: 0.1em; }
+  .theme-toggle { width: 28px; height: 28px; font-size: 13px; }
+}
+@media (max-width: 520px) {
+  .interest-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery img { min-width: 560px; }
+}
+@media (max-width: 380px) {
+  /* Very small screens only: drop the anchor links, keep brand + theme toggle */
+  .nav-links a { display: none; }
+}
 
-    let i = 0, seen = 0;
-    for (let y = 0; y < H && i < allocCount; y += stride) {
-      for (let x = 0; x < W && i < allocCount; x += stride) {
-        const ix = Math.floor(x * dpr), iy = Math.floor(y * dpr);
-        const idx = (iy * img.width + ix) * 4 + 3;
-        if (data[idx] > 128) {
-          if (seen % downsample === 0) {
-            newOx[i] = x; newOy[i] = y;
-            const ang = Math.random() * Math.PI * 2;
-            const rad = Math.max(W, H) * (0.6 + Math.random() * 0.5);
-            const rx = W / 2 + Math.cos(ang) * rad;
-            const ry = H / 2 + Math.sin(ang) * rad;
-            newSx[i] = rx; newSy[i] = ry;
-            newPx[i] = rx; newPy[i] = ry;
-            newC[i] = Math.floor(Math.random() * PALETTE.length);
-            i++;
-          }
-          seen++;
-        }
-      }
-    }
+@media (prefers-reduced-motion: reduce) {
+  .hero-fallback { animation: none; }
+  html { scroll-behavior: auto; }
+}
 
-    count = i;
-    ox = newOx; oy = newOy; sx = newSx; sy = newSy; px = newPx; py = newPy;
-    repX = new Float32Array(allocCount);
-    repY = new Float32Array(allocCount);
-    cIdx = newC;
-    formVal = 0;
-    lastFrame = null;
-  }
-
-  function resize() {
-    const rect = container.getBoundingClientRect();
-    const w = Math.floor(rect.width), h = Math.floor(rect.height);
-    if (w <= 0 || h <= 0) return;
-    dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-    cssW = w; cssH = h;
-    canvas.width = Math.floor(cssW * dpr);
-    canvas.height = Math.floor(cssH * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    sampleText();
-  }
-
-  const buckets = PALETTE.map(function () { return []; });
-
-  function drawFrame() {
-    ctx.clearRect(0, 0, cssW, cssH);
-    const drawSize = Math.max(1, PARTICLE_SIZE / 4);
-    const half = drawSize / 2;
-
-    const now = performance.now();
-    const last = lastFrame == null ? now : lastFrame;
-    const dt = Math.min(64, Math.max(0, now - last));
-    lastFrame = now;
-
-    const target = reverse ? 0 : 1;
-    let v = formVal;
-    if (FORM_MS <= 0) { v = target; }
-    else {
-      const step = dt / FORM_MS;
-      if (v < target) v = Math.min(target, v + step);
-      else if (v > target) v = Math.max(target, v - step);
-    }
-    formVal = v;
-    if (reverse && v <= 0) hidden = true;
-    if (hidden) return;
-    const forming = v < 1;
-    const factor = easeFn(v);
-
-    const hitSpeed = mouseSpeed;
-    mouseSpeed *= 0.88;
-    const active = !forming && pointer.active;
-    if (active) {
-      const lerpFactor = Math.max(0.08, 0.3 - hitSpeed * 0.006);
-      if (smoothX < -9000) { smoothX = pointer.x; smoothY = pointer.y; }
-      else {
-        smoothX += (pointer.x - smoothX) * lerpFactor;
-        smoothY += (pointer.y - smoothY) * lerpFactor;
-      }
-    } else {
-      smoothX = -99999; smoothY = -99999;
-    }
-    const mx = smoothX, my = smoothY;
-    const repCutoff = Math.max(1, MOUSE_RADIUS);
-    const repCutoffSq = repCutoff * repCutoff;
-
-    for (let b = 0; b < buckets.length; b++) buckets[b].length = 0;
-
-    for (let i = 0; i < count; i++) {
-      const oxi = ox[i], oyi = oy[i];
-      if (forming) {
-        px[i] = sx[i] + (oxi - sx[i]) * factor;
-        py[i] = sy[i] + (oyi - sy[i]) * factor;
-        buckets[cIdx[i]].push(i);
-        continue;
-      }
-      let inZone = false;
-      if (active) {
-        const dx = oxi - mx, dy = oyi - my;
-        const distSq = dx * dx + dy * dy;
-        if (distSq > 0 && distSq < repCutoffSq) {
-          const dist = Math.sqrt(distSq);
-          const nx = dx / dist, ny = dy / dist;
-          const falloff = 1 - dist / repCutoff;
-          const push = falloff * hitSpeed * MOUSE_FORCE * 0.05;
-          repX[i] += nx * push;
-          repY[i] += ny * push;
-          const targetRepX = nx * (repCutoff - dist);
-          const targetRepY = ny * (repCutoff - dist);
-          repX[i] += (targetRepX - repX[i]) * 0.06;
-          repY[i] += (targetRepY - repY[i]) * 0.06;
-          inZone = true;
-        }
-      }
-      if (!inZone) { repX[i] *= 0.97; repY[i] *= 0.97; }
-      px[i] = oxi + repX[i];
-      py[i] = oyi + repY[i];
-      buckets[cIdx[i]].push(i);
-    }
-
-    ctx.globalAlpha = forming ? Math.min(1, Math.max(0, factor)) : 1;
-    for (let b = 0; b < buckets.length; b++) {
-      const bucket = buckets[b];
-      if (!bucket.length) continue;
-      ctx.fillStyle = PALETTE[b];
-      for (let k = 0; k < bucket.length; k++) {
-        const i = bucket[k];
-        ctx.fillRect(px[i] - half, py[i] - half, drawSize, drawSize);
-      }
-    }
-    ctx.globalAlpha = 1;
-  }
-
-  function staticDraw() {
-    hidden = false; reverse = false;
-    for (let i = 0; i < count; i++) { px[i] = ox[i]; py[i] = oy[i]; }
-    drawFrame();
-  }
-
-  const ro = new ResizeObserver(function () {
-    resize();
-    if (reduceMotion) staticDraw();
-  });
-  ro.observe(container);
-
-  function onMove(e) {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = rect.width > 0 ? cssW / rect.width : 1;
-    const scaleY = rect.height > 0 ? cssH / rect.height : 1;
-    const mx = (e.clientX - rect.left) * scaleX;
-    const my = (e.clientY - rect.top) * scaleY;
-    if (prevMx > -9000) {
-      const ddx = mx - prevMx, ddy = my - prevMy;
-      mouseSpeed = Math.sqrt(ddx * ddx + ddy * ddy);
-    }
-    prevMx = mx; prevMy = my;
-    pointer.x = mx; pointer.y = my; pointer.active = true;
-  }
-  function onLeave() {
-    pointer.x = -99999; pointer.y = -99999; pointer.active = false;
-    prevMx = -99999; prevMy = -99999;
-  }
-  canvas.addEventListener("pointermove", onMove);
-  canvas.addEventListener("pointerleave", onLeave);
-  canvas.addEventListener("pointercancel", onLeave);
-
-  // Formation trigger: assemble once the hero scrolls into view (it's above
-  // the fold, so in practice this fires almost immediately on load).
-  let entered = false;
-  const io = new IntersectionObserver(function (entries) {
-    if (entries[0].isIntersecting && !entered) {
-      entered = true;
-      reverse = false;
-      hidden = false;
-      io.disconnect();
-    }
-  }, { threshold: 0 });
-  io.observe(container);
-
-  resize();
-
-  // Canvas text draws in whatever font is ready *at that instant* — if the
-  // Bricolage Grotesque file is still loading, the first sample would
-  // silently fall back to Arial. Re-sample once it's actually available.
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () {
-      sampleText();
-    });
-  }
-
-  if (reduceMotion) {
-    staticDraw();
-  } else {
-    (function loop() {
-      drawFrame();
-      requestAnimationFrame(loop);
-    })();
-  }
-})();
+/* ---- Placeholder image containers (Project 2: images not added yet) ---- */
+.fc-item-media.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--card-border);
+  background: var(--card);
+  border-radius: 28px;
+}
+.placeholder-label {
+  font-size: 13px;
+  color: var(--text-faint);
+  text-align: center;
+  padding: 0 16px;
+}
+.placeholder-play {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  border: 1px solid var(--card-border);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+.fc-item-media.placeholder { position: relative; }
