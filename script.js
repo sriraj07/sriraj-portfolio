@@ -137,8 +137,9 @@
   const PARTICLE_COUNT = 50; // 1-50, higher = denser
   const MOUSE_RADIUS = 45;
   const MOUSE_FORCE = 25;
-  const FONT_SIZE_CAP = 96;
-  const FONT_FAMILY = '"Doto", "Helvetica Neue", Arial, sans-serif';
+  const FONT_SIZE_CAP = 192;
+  const FONT_WEIGHT = 600; // Medium
+  const FONT_FAMILY = '"Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif';
   const FORM_MS = 900; // formation duration in ms
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -187,7 +188,7 @@
     let lo = 8, hi = cap, best = lo;
     for (let i = 0; i < 12; i++) {
       const mid = (lo + hi) / 2;
-      measureCtx.font = `700 ${mid}px ${FONT_FAMILY}`;
+      measureCtx.font = `${FONT_WEIGHT} ${mid}px ${FONT_FAMILY}`;
       let widest = 0;
       lines.forEach(function (line) {
         const w = measureCtx.measureText(line).width;
@@ -215,7 +216,7 @@
 
     offCtx.clearRect(0, 0, W, H);
     offCtx.fillStyle = "#fff";
-    offCtx.font = `700 ${size}px ${FONT_FAMILY}`;
+    offCtx.font = `${FONT_WEIGHT} ${size}px ${FONT_FAMILY}`;
     offCtx.textAlign = "center";
     offCtx.textBaseline = "middle";
     const lineGap = size * 1.05;
@@ -430,6 +431,15 @@
   io.observe(container);
 
   resize();
+
+  // Canvas text draws in whatever font is ready *at that instant* — if the
+  // Bricolage Grotesque file is still loading, the first sample would
+  // silently fall back to Arial. Re-sample once it's actually available.
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      sampleText();
+    });
+  }
 
   if (reduceMotion) {
     staticDraw();
