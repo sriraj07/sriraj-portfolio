@@ -1,6 +1,6 @@
 /* =========================================================
    Sriraj Rajkumar — Portfolio 2026
-   Reproduced from Figma "Portfolio - 2026" (dark + light).
+   Reproduced from Figma "Portfolio - 2026" (dark).
    ========================================================= */
 
 :root {
@@ -9,7 +9,6 @@
   --accent: #ff8d28;
   --container: 1200px;
 
-  /* Dark theme (default) */
   --bg: #020103;
   --bg-elev: #151515;
   --card: #171717;
@@ -18,17 +17,6 @@
   --text-dim: #a3a3a3;
   --text-faint: #6b6b6b;
   --eyebrow: #7c7c7c;
-}
-
-[data-theme="light"] {
-  --bg: #f4f4f5;
-  --bg-elev: #ffffff;
-  --card: #ffffff;
-  --card-border: rgba(0, 0, 0, 0.08);
-  --text: #131313;
-  --text-dim: #4d4d4d;
-  --text-faint: #8a8a8a;
-  --eyebrow: #8a8a8a;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -80,19 +68,6 @@ img { display: block; max-width: 100%; height: auto; }
   transition: color 0.2s;
 }
 .nav-links a:hover { color: var(--text); }
-.theme-toggle {
-  background: none;
-  border: 1px solid var(--card-border);
-  color: var(--text);
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 15px;
-  line-height: 1;
-  display: grid; place-items: center;
-  transition: border-color 0.2s, transform 0.3s;
-}
-.theme-toggle:hover { border-color: var(--accent); transform: rotate(180deg); }
 
 /* ===================== HERO + INTRO (one continuous section) ===================== */
 .hero-intro-wrap {
@@ -720,14 +695,13 @@ img { display: block; max-width: 100%; height: auto; }
   .brand { font-size: 12px; letter-spacing: 0.14em; }
   .nav-links { gap: 14px; }
   .nav-links a { font-size: 10.5px; letter-spacing: 0.1em; }
-  .theme-toggle { width: 28px; height: 28px; font-size: 13px; }
 }
 @media (max-width: 520px) {
   .interest-grid { grid-template-columns: repeat(2, 1fr); }
   .gallery img { min-width: 560px; }
 }
 @media (max-width: 380px) {
-  /* Very small screens only: drop the anchor links, keep brand + theme toggle */
+  /* Very small screens only: drop the anchor links, keep just the brand */
   .nav-links a { display: none; }
 }
 
