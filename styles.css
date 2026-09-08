@@ -516,28 +516,40 @@ img { display: block; max-width: 100%; height: auto; }
   overflow: hidden;
   background: var(--card);
   border: 1px solid var(--card-border);
-  border-radius: 26px;
+  border-radius: 20px;
   padding: 40px 34px 34px;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.35s ease, transform 0.35s ease;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
 }
 .ref-card::before {
   content: "";
   position: absolute;
-  left: -10%;
-  bottom: -25%;
-  width: 110%;
-  height: 110%;
-  background: radial-gradient(circle at 25% 75%, rgba(136, 48, 224, 0.55) 0%, rgba(136, 48, 224, 0.28) 32%, rgba(90, 30, 150, 0.10) 52%, transparent 68%);
+  inset: 0;
+  background: linear-gradient(180deg, #010002 0%, #361764 100%);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.ref-card::after {
+  content: "";
+  position: absolute;
+  left: 34px;
+  right: 34px;
+  top: 108px;
+  height: 1px;
+  background: #282729;
   opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
 }
 .ref-card:hover {
   border-color: rgba(180, 120, 255, 0.32);
+  box-shadow: 0 10px 37px 10px rgba(78, 0, 191, 0.41);
 }
-.ref-card:hover::before {
+.ref-card:hover::before,
+.ref-card:hover::after {
   opacity: 1;
 }
 .ref-quote, .ref-by {
