@@ -638,7 +638,7 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* ===================== FOOTER ===================== */
 .footer {
-  background: #09090b;
+  background: #020103;
   color: #777;
   text-align: center;
   padding: clamp(90px, 14vw, 150px) 24px 60px;
