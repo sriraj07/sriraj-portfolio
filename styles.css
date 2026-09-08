@@ -561,9 +561,29 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* ===================== INTERESTS ===================== */
 .interests {
+  position: relative;
   max-width: var(--container);
   margin: 0 auto;
   padding: clamp(40px, 6vw, 70px) clamp(24px, 5vw, 40px) clamp(80px, 10vw, 130px);
+}
+.interests::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: min(100%, 1284px);
+  height: 380px;
+  background-image: url('assets/section-bg-gradient.svg');
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: 100% 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+.interests-copy, .interest-grid {
+  position: relative;
+  z-index: 1;
 }
 .interests-copy { max-width: 1040px; margin-bottom: 60px; }
 .interests-copy p {
