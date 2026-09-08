@@ -532,24 +532,11 @@ img { display: block; max-width: 100%; height: auto; }
   transition: opacity 0.4s ease;
   pointer-events: none;
 }
-.ref-card::after {
-  content: "";
-  position: absolute;
-  left: 34px;
-  right: 34px;
-  top: 108px;
-  height: 1px;
-  background: #282729;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
 .ref-card:hover {
   border-color: rgba(180, 120, 255, 0.32);
   box-shadow: 0 10px 37px 10px rgba(78, 0, 191, 0.41);
 }
-.ref-card:hover::before,
-.ref-card:hover::after {
+.ref-card:hover::before {
   opacity: 1;
 }
 .ref-quote, .ref-by {
