@@ -97,7 +97,7 @@ img { display: block; max-width: 100%; height: auto; }
 /* ===================== HERO + INTRO (one continuous section) ===================== */
 .hero-intro-wrap {
   position: relative;
-  background: #09090B;
+  background: #020103;
   overflow: hidden;
 }
 .hero-intro-wrap::before {
