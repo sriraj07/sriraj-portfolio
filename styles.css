@@ -512,12 +512,37 @@ img { display: block; max-width: 100%; height: auto; }
   gap: 24px;
 }
 .ref-card {
+  position: relative;
+  overflow: hidden;
   background: var(--card);
   border: 1px solid var(--card-border);
   border-radius: 26px;
   padding: 40px 34px 34px;
   display: flex;
   flex-direction: column;
+  transition: border-color 0.35s ease, transform 0.35s ease;
+}
+.ref-card::before {
+  content: "";
+  position: absolute;
+  left: -10%;
+  bottom: -25%;
+  width: 110%;
+  height: 110%;
+  background: radial-gradient(circle at 25% 75%, rgba(136, 48, 224, 0.55) 0%, rgba(136, 48, 224, 0.28) 32%, rgba(90, 30, 150, 0.10) 52%, transparent 68%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.ref-card:hover {
+  border-color: rgba(180, 120, 255, 0.32);
+}
+.ref-card:hover::before {
+  opacity: 1;
+}
+.ref-quote, .ref-by {
+  position: relative;
+  z-index: 1;
 }
 .ref-quote {
   font-family: var(--rounded);
