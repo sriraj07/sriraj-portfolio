@@ -108,9 +108,29 @@ img { display: block; max-width: 100%; height: auto; }
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 55%, rgba(136, 48, 224, 0.45) 0%, rgba(136, 48, 224, 0.22) 28%, rgba(90, 30, 150, 0.08) 50%, transparent 70%);
+    radial-gradient(circle at 50% 55%, rgba(136, 48, 224, 0.45) 0%, rgba(136, 48, 224, 0.22) 28%, rgba(90, 30, 150, 0.08) 50%, transparent 70%),
+    radial-gradient(circle at 42% 48%, rgba(180, 90, 255, 0.16) 0%, transparent 42%),
+    radial-gradient(circle at 58% 62%, rgba(90, 20, 160, 0.14) 0%, transparent 45%);
+  pointer-events: none;
+  z-index: 1;
+}
+.hero-rects {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
   pointer-events: none;
 }
+.hero-rect {
+  position: absolute;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.2s ease-out;
+}
+.hero-rect-lg { width: 29px; height: 29px; }
+.hero-rect-sm { width: 13px; height: 13px; }
 .hero-spline, .hero-fallback {
   position: absolute; inset: 0; width: 100%; height: 100%;
 }

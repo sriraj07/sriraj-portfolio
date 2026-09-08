@@ -450,3 +450,45 @@
     })();
   }
 })();
+
+// Hero floating rectangles — subtle cursor-driven parallax. Larger squares
+// sit "closer" and drift more; smaller ones sit "farther" and drift less.
+(function () {
+  const hero = document.querySelector(".hero");
+  const wrap = document.getElementById("heroRects");
+  if (!hero || !wrap) return;
+  const rects = Array.from(wrap.querySelectorAll(".hero-rect"));
+  if (!rects.length) return;
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion) return;
+
+  // Depth per element: bigger square = closer = moves more.
+  const depths = rects.map(function (el) {
+    return el.classList.contains("hero-rect-lg") ? 1 : 0.5;
+  });
+
+  let targetX = 0, targetY = 0; // normalized -1..1
+  let curX = 0, curY = 0;
+  const MAX_SHIFT = 18; // px of drift for the closest (largest) squares
+
+  hero.addEventListener("pointermove", function (e) {
+    const rect = hero.getBoundingClientRect();
+    targetX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    targetY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+  });
+  hero.addEventListener("pointerleave", function () {
+    targetX = 0;
+    targetY = 0;
+  });
+
+  (function loop() {
+    curX += (targetX - curX) * 0.06;
+    curY += (targetY - curY) * 0.06;
+    rects.forEach(function (el, i) {
+      const d = depths[i];
+      el.style.transform = "translate3d(" + (curX * MAX_SHIFT * d).toFixed(2) + "px, " + (curY * MAX_SHIFT * d).toFixed(2) + "px, 0)";
+    });
+    requestAnimationFrame(loop);
+  })();
+})();
