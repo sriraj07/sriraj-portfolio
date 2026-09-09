@@ -610,6 +610,22 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .interest-card figcaption strong { font-size: 15px; font-weight: 700; }
 .interest-card figcaption span { font-size: 13px; color: rgba(255,255,255,0.75); }
+.interest-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 260px;
+  transform: translate3d(-1000px, -1000px, 0) translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(206, 166, 255, 0.35) 0%, rgba(206, 166, 255, 0.12) 45%, transparent 72%);
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+.interest-card:hover .interest-glow { opacity: 1; }
 
 /* ===================== FOOTER ===================== */
 .footer {

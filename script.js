@@ -478,3 +478,58 @@
     requestAnimationFrame(loop);
   })();
 })();
+
+// Interest cards (Coffee/Piano/Motorcycle/Tennis) — a small badge follows the
+// cursor within each card on hover, trailing smoothly rather than snapping,
+// clipped by the card's own overflow so it never spills past its edges.
+(function () {
+  const cards = document.querySelectorAll(".interest-card");
+  if (!cards.length) return;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  cards.forEach(function (card) {
+    const badge = card.querySelector(".interest-glow");
+    if (!badge) return;
+
+    let targetX = 0, targetY = 0;
+    let curX = 0, curY = 0;
+    let active = false;
+    let raf = null;
+
+    function onMove(e) {
+      const rect = card.getBoundingClientRect();
+      targetX = e.clientX - rect.left;
+      targetY = e.clientY - rect.top;
+      if (reduceMotion) {
+        curX = targetX;
+        curY = targetY;
+        badge.style.transform = "translate3d(" + curX + "px, " + curY + "px, 0) translate(-50%, -50%)";
+      }
+    }
+
+    function loop() {
+      if (!active) return;
+      curX += (targetX - curX) * 0.18;
+      curY += (targetY - curY) * 0.18;
+      badge.style.transform = "translate3d(" + curX.toFixed(1) + "px, " + curY.toFixed(1) + "px, 0) translate(-50%, -50%)";
+      raf = requestAnimationFrame(loop);
+    }
+
+    card.addEventListener("pointerenter", function (e) {
+      const rect = card.getBoundingClientRect();
+      curX = targetX = e.clientX - rect.left;
+      curY = targetY = e.clientY - rect.top;
+      badge.style.transform = "translate3d(" + curX + "px, " + curY + "px, 0) translate(-50%, -50%)";
+      active = true;
+      if (!reduceMotion) {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(loop);
+      }
+    });
+    card.addEventListener("pointermove", onMove);
+    card.addEventListener("pointerleave", function () {
+      active = false;
+      cancelAnimationFrame(raf);
+    });
+  });
+})();
