@@ -479,20 +479,25 @@
   })();
 })();
 
-// Interest cards (Coffee/Piano/Motorcycle/Tennis) — the photo inside each
-// card pans slightly toward the cursor on hover (scaled up via CSS so the
-// shift never exposes an edge), eased smoothly rather than snapping.
+// Interest cards (Coffee/Piano/Motorcycle/Tennis) — a 3D tilt-with-parallax
+// hover: the whole card rotates in perspective toward the cursor, while the
+// photo (closer layer, moves more) and caption (farther layer, moves less)
+// shift at different rates to sell the sense of depth. Eased via rAF lerp
+// rather than snapping straight to the cursor.
 (function () {
   const cards = document.querySelectorAll(".interest-card");
   if (!cards.length) return;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduceMotion) return;
 
-  const MAX_SHIFT = 18; // px of pan at the extreme edges of the card
+  const MAX_TILT = 10;      // degrees of rotation at the card's extreme edges
+  const IMG_SHIFT = 16;     // px — the photo (near layer) moves the most
+  const CAPTION_SHIFT = 6;  // px — the caption (far layer) moves the least
 
   cards.forEach(function (card) {
     const img = card.querySelector("img");
-    if (!img) return;
+    const caption = card.querySelector("figcaption");
+    if (!img || !caption) return;
 
     let targetX = 0, targetY = 0; // normalized -1..1
     let curX = 0, curY = 0;
@@ -505,12 +510,22 @@
       targetY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
     }
 
+    function render() {
+      const rotY = curX * MAX_TILT;
+      const rotX = -curY * MAX_TILT;
+      card.style.transform =
+        "perspective(800px) rotateX(" + rotX.toFixed(2) + "deg) rotateY(" + rotY.toFixed(2) + "deg) scale3d(1.02, 1.02, 1.02)";
+      img.style.transform =
+        "translate3d(" + (-curX * IMG_SHIFT).toFixed(1) + "px, " + (-curY * IMG_SHIFT).toFixed(1) + "px, 0) scale(1.08)";
+      caption.style.transform =
+        "translate3d(" + (-curX * CAPTION_SHIFT).toFixed(1) + "px, " + (-curY * CAPTION_SHIFT).toFixed(1) + "px, 0)";
+    }
+
     function loop() {
       if (!active) return;
-      curX += (targetX - curX) * 0.15;
-      curY += (targetY - curY) * 0.15;
-      img.style.transform =
-        "scale(1.12) translate3d(" + (-curX * MAX_SHIFT).toFixed(1) + "px, " + (-curY * MAX_SHIFT).toFixed(1) + "px, 0)";
+      curX += (targetX - curX) * 0.14;
+      curY += (targetY - curY) * 0.14;
+      render();
       raf = requestAnimationFrame(loop);
     }
 
@@ -526,7 +541,9 @@
     card.addEventListener("pointerleave", function () {
       active = false;
       cancelAnimationFrame(raf);
+      card.style.transform = "";
       img.style.transform = "";
+      caption.style.transform = "";
     });
   });
 })();
