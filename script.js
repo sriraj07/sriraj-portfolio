@@ -479,57 +479,54 @@
   })();
 })();
 
-// Interest cards (Coffee/Piano/Motorcycle/Tennis) — a small badge follows the
-// cursor within each card on hover, trailing smoothly rather than snapping,
-// clipped by the card's own overflow so it never spills past its edges.
+// Interest cards (Coffee/Piano/Motorcycle/Tennis) — the photo inside each
+// card pans slightly toward the cursor on hover (scaled up via CSS so the
+// shift never exposes an edge), eased smoothly rather than snapping.
 (function () {
   const cards = document.querySelectorAll(".interest-card");
   if (!cards.length) return;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion) return;
+
+  const MAX_SHIFT = 18; // px of pan at the extreme edges of the card
 
   cards.forEach(function (card) {
-    const badge = card.querySelector(".interest-glow");
-    if (!badge) return;
+    const img = card.querySelector("img");
+    if (!img) return;
 
-    let targetX = 0, targetY = 0;
+    let targetX = 0, targetY = 0; // normalized -1..1
     let curX = 0, curY = 0;
     let active = false;
     let raf = null;
 
-    function onMove(e) {
+    function setTarget(e) {
       const rect = card.getBoundingClientRect();
-      targetX = e.clientX - rect.left;
-      targetY = e.clientY - rect.top;
-      if (reduceMotion) {
-        curX = targetX;
-        curY = targetY;
-        badge.style.transform = "translate3d(" + curX + "px, " + curY + "px, 0) translate(-50%, -50%)";
-      }
+      targetX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      targetY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
     }
 
     function loop() {
       if (!active) return;
-      curX += (targetX - curX) * 0.18;
-      curY += (targetY - curY) * 0.18;
-      badge.style.transform = "translate3d(" + curX.toFixed(1) + "px, " + curY.toFixed(1) + "px, 0) translate(-50%, -50%)";
+      curX += (targetX - curX) * 0.15;
+      curY += (targetY - curY) * 0.15;
+      img.style.transform =
+        "scale(1.12) translate3d(" + (-curX * MAX_SHIFT).toFixed(1) + "px, " + (-curY * MAX_SHIFT).toFixed(1) + "px, 0)";
       raf = requestAnimationFrame(loop);
     }
 
     card.addEventListener("pointerenter", function (e) {
-      const rect = card.getBoundingClientRect();
-      curX = targetX = e.clientX - rect.left;
-      curY = targetY = e.clientY - rect.top;
-      badge.style.transform = "translate3d(" + curX + "px, " + curY + "px, 0) translate(-50%, -50%)";
+      setTarget(e);
+      curX = targetX;
+      curY = targetY;
       active = true;
-      if (!reduceMotion) {
-        cancelAnimationFrame(raf);
-        raf = requestAnimationFrame(loop);
-      }
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(loop);
     });
-    card.addEventListener("pointermove", onMove);
+    card.addEventListener("pointermove", setTarget);
     card.addEventListener("pointerleave", function () {
       active = false;
       cancelAnimationFrame(raf);
+      img.style.transform = "";
     });
   });
 })();
