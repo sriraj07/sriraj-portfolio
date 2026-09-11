@@ -581,7 +581,7 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .interests-copy { max-width: 1040px; margin-bottom: 60px; }
 .interests-copy p {
-  font-size: clamp(11px, calc(2.1vw - 8px), 19px);
+  font-size: clamp(16px, calc(2.1vw - 8px), 24px);
   line-height: 1.45;
   color: var(--text);
   margin-bottom: 1.2em;
