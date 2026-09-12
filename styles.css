@@ -174,18 +174,18 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .hero-subtitle {
   text-align: center;
-  margin-top: clamp(-220px, -15.7vw, -60px);
+  margin-top: clamp(-160px, calc(-15.7vw + 60px), -60px);
 }
 .hero-subtitle-title {
   font-family: var(--rounded);
   font-weight: 600;
-  font-size: 24pt;
+  font-size: 30px;
   color: #fff;
 }
 .hero-subtitle-sub {
   font-family: var(--rounded);
   font-weight: 300;
-  font-size: 24pt;
+  font-size: 30px;
   color: rgba(255, 255, 255, 0.75);
   margin-top: 4px;
 }
