@@ -29,7 +29,6 @@
     const track = carouselRoot.querySelector(".fig-carousel-track");
     const prevBtn = carouselRoot.querySelector(".fc-arrow.prev");
     const nextBtn = carouselRoot.querySelector(".fc-arrow.next");
-    const segs = Array.from(carouselRoot.querySelectorAll(".fc-divider span"));
     if (!track || !prevBtn || !nextBtn) return;
 
     // Treat each direct child of the track (a slide, a pair, whatever it is)
@@ -67,15 +66,6 @@
       const max = track.scrollWidth - track.clientWidth - 1;
       prevBtn.disabled = track.scrollLeft <= 0;
       nextBtn.disabled = track.scrollLeft >= max;
-
-      if (segs.length) {
-        const ratio = max > 0 ? Math.min(Math.max(track.scrollLeft / max, 0), 1) : 0;
-        // Always keep at least the first segment filled, even at scrollLeft 0.
-        const filledCount = Math.max(1, Math.round(ratio * segs.length));
-        segs.forEach(function (seg, i) {
-          seg.classList.toggle("filled", i < filledCount);
-        });
-      }
     }
 
     prevBtn.addEventListener("click", function () {

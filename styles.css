@@ -354,7 +354,7 @@ img { display: block; max-width: 100%; height: auto; }
 .fc-nav {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 .fc-arrow {
   width: 34px;
@@ -373,22 +373,6 @@ img { display: block; max-width: 100%; height: auto; }
 .fc-arrow:hover:not(:disabled) { border-color: var(--accent); }
 .fc-arrow:active:not(:disabled) { transform: scale(0.92); }
 .fc-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
-
-.fc-divider {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.fc-divider span {
-  width: 16px;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--card-border);
-  transition: background 0.25s ease;
-}
-.fc-divider span.filled {
-  background: #ffffff;
-}
 
 .fig-carousel-track {
   display: flex;
