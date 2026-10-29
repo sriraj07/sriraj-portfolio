@@ -484,31 +484,13 @@ img { display: block; max-width: 100%; height: auto; }
   .fc-item { --h: clamp(200px, 55vw, 340px); }
 }
 
-/* ---- NYC Subway App carousel: three 368x742 phone slides + one 1184x742
-   wide slide (matches the Figma frame; gap 10px). Track height follows the
+/* ---- NYC Subway App carousel: wide 1184x742 slides, a stacked pair and a
+   1075x742 slide (matches the Figma frame; 40px gaps). Track height follows the
    frame's aspect ratio so slide sizes/crops stay exact at any width. ---- */
 .fc-track-nyc {
   height: auto;
   aspect-ratio: 1184 / 742;
   gap: 40px;
-}
-/* phones sit 10px apart (the other slide groups keep the 40px gap) */
-.fc-slide.fc-nyc-phone + .fc-slide.fc-nyc-phone { margin-left: -30px; }
-.fc-slide.fc-nyc-phone {
-  flex: 0 0 auto;
-  height: 100%;
-  aspect-ratio: 368 / 742;
-  border-radius: 46px;
-  background: #0D0D0D;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-.fc-slide.fc-nyc-phone::after {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 17.4%;
-  background: linear-gradient(0deg, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0));
-  pointer-events: none;
 }
 .fc-slide.fc-nyc-wide {
   flex: 0 0 auto;
@@ -561,9 +543,8 @@ img { display: block; max-width: 100%; height: auto; }
 }
 @media (max-width: 900px) {
   .fc-track-nyc { aspect-ratio: auto; height: clamp(380px, 100vw, 560px); gap: 16px; }
-  .fc-slide.fc-nyc-phone + .fc-slide.fc-nyc-phone { margin-left: -6px; }
   .fc-nyc-pair { gap: 16px; }
-  .fc-slide.fc-nyc-phone, .fc-slide.fc-nyc-wide { border-radius: 28px; }
+  .fc-slide.fc-nyc-wide { border-radius: 28px; }
   .fc-nyc-wide-inner { border-radius: 26px; }
 }
 
