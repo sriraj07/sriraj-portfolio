@@ -484,6 +484,89 @@ img { display: block; max-width: 100%; height: auto; }
   .fc-item { --h: clamp(200px, 55vw, 340px); }
 }
 
+/* ---- NYC Subway App carousel: three 368x742 phone slides + one 1184x742
+   wide slide (matches the Figma frame; gap 10px). Track height follows the
+   frame's aspect ratio so slide sizes/crops stay exact at any width. ---- */
+.fc-track-nyc {
+  height: auto;
+  aspect-ratio: 1184 / 742;
+  gap: 40px;
+}
+/* phones sit 10px apart (the other slide groups keep the 40px gap) */
+.fc-slide.fc-nyc-phone + .fc-slide.fc-nyc-phone { margin-left: -30px; }
+.fc-slide.fc-nyc-phone {
+  flex: 0 0 auto;
+  height: 100%;
+  aspect-ratio: 368 / 742;
+  border-radius: 46px;
+  background: #0D0D0D;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.fc-slide.fc-nyc-phone::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 17.4%;
+  background: linear-gradient(0deg, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0));
+  pointer-events: none;
+}
+.fc-slide.fc-nyc-wide {
+  flex: 0 0 auto;
+  height: 100%;
+  aspect-ratio: 1184 / 742;
+  border-radius: 46px;
+  border: 0;
+  padding: 2px;
+  background: linear-gradient(165deg,
+    rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.12) 20%,
+    rgba(255,255,255,0.03) 40%, rgba(255,255,255,0) 50%,
+    rgba(255,255,255,0.04) 65%, rgba(255,255,255,0.2) 85%,
+    rgba(255,255,255,0.35) 100%);
+}
+.fc-slide.fc-nyc-wide.fc-nyc-wf { aspect-ratio: 1075 / 742; }
+/* two stacked slides (368 wide, 40px apart) */
+.fc-nyc-pair {
+  flex: 0 0 auto;
+  height: 100%;
+  aspect-ratio: 368 / 742;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  scroll-snap-align: start;
+}
+.fc-nyc-pair .fc-slide { flex: 1 1 0; min-height: 0; background: #fff; }
+.fc-nyc-wide-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 44px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(255,255,255,0.05);
+}
+.fc-nyc-wide-inner::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 40%;
+  background: linear-gradient(0deg, rgba(0,0,0,0.3), rgba(0,0,0,0));
+  pointer-events: none;
+}
+.fc-nyc-wide-inner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0) 30%);
+  pointer-events: none;
+}
+@media (max-width: 900px) {
+  .fc-track-nyc { aspect-ratio: auto; height: clamp(380px, 100vw, 560px); gap: 16px; }
+  .fc-slide.fc-nyc-phone + .fc-slide.fc-nyc-phone { margin-left: -6px; }
+  .fc-nyc-pair { gap: 16px; }
+  .fc-slide.fc-nyc-phone, .fc-slide.fc-nyc-wide { border-radius: 28px; }
+  .fc-nyc-wide-inner { border-radius: 26px; }
+}
+
 /* ===================== SHARED SECTION BITS ===================== */
 .eyebrow {
   display: block;
